@@ -1,0 +1,9 @@
+/* Add to style.css */
+.header-logo-title {
+  display: flex;
+  align-items: center;
+}
+.logo {
+  height: 48px;
+  margin-right: 12px;
+}

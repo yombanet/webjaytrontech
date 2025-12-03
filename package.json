@@ -1,0 +1,11 @@
+{
+  "name": "jaytron-portal-demo",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "uuid": "^9.0.0",
+    "node-fetch": "^2.6.7"
+  }
+}

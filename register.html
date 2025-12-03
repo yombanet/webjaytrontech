@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Contact — Jaytron Support</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      body{
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+        color: #fff;
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background-color: #050505; /* fallback */
+        background-image: url("img/mine.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+      }
+
+      /* subtle dark overlay so form stays readable */
+      body::before{
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .card{
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 720px;
+        padding: 1.25rem;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+      }
+      label{color:#ddd;}
+      .btn-primary{background:#ff7f11; border:0;}
+      .helper-note{color:rgba(255,255,255,0.7); font-size:.95rem;}
+
+      /* Contact title in yellow */
+      .contact-title { color: #ffd400; }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <section class="card mx-auto" aria-labelledby="contact-title">
+        <h1 id="contact-title" class="h4 mb-3 contact-title">Register / Contact Support</h1>
+        <p class="helper-note mb-3">Fill this form to request tracking access. Submitting will open your email client pre-filled to send to support@jaytrontechsolutions.com.</p>
+
+        <form id="contactForm" onsubmit="return submitContact(event)" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="cname" class="form-label">Full name</label>
+              <input id="cname" name="name" type="text" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="cemail" class="form-label">Email</label>
+              <input id="cemail" name="email" type="email" class="form-control" required>
+            </div>
+            <div class="col-12">
+              <label for="ccompany" class="form-label">Company / Organisation</label>
+              <input id="ccompany" name="company" type="text" class="form-control">
+            </div>
+            <div class="col-12">
+              <label for="cmessage" class="form-label">Message / Access details</label>
+              <textarea id="cmessage" name="message" rows="5" class="form-control" required placeholder="Describe your request (fleet, role, contact number)..."></textarea>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="small helper-note">Or email directly: <a href="mailto:support@jaytrontechsolutions.com" class="text-decoration-underline">support@jaytrontechsolutions.com</a></div>
+            <div>
+              <button type="submit" class="btn btn-primary">Send Request</button>
+            </div>
+          </div>
+
+          <div id="contactStatus" class="mt-3" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      // Build a mailto URL from form fields and open the user's mail client.
+      function submitContact(e){
+        e.preventDefault();
+        const name = document.getElementById('cname').value.trim();
+        const email = document.getElementById('cemail').value.trim();
+        const company = document.getElementById('ccompany').value.trim();
+        const message = document.getElementById('cmessage').value.trim();
+        const statusEl = document.getElementById('contactStatus');
+        statusEl.textContent = '';
+        statusEl.className = '';
+
+        if(!name || !email || !message){
+          statusEl.textContent = 'Please fill name, email and message.';
+          statusEl.style.color = '#ffb7b7';
+          return false;
+        }
+
+        const to = 'support@jaytrontechsolutions.com';
+        const subject = encodeURIComponent('Access request from ' + name);
+        const bodyLines = [
+          'Name: ' + name,
+          'Email: ' + email,
+          'Company: ' + (company || '-'),
+          '',
+          'Message:',
+          message,
+          '',
+          '---',
+          'Sent from Jaytron contact form'
+        ];
+        const body = encodeURIComponent(bodyLines.join('\n'));
+
+        // Open mail client with prefilled email
+        const mailto = `mailto:${to}?subject=${subject}&body=${body}`;
+        window.location.href = mailto;
+
+        // Inform user (some clients will open, some browsers may block)
+        statusEl.textContent = 'Opening email client… if nothing happens, use the direct email link above.';
+        statusEl.style.color = '#b7ffb8';
+
+        return false;
+      }
+    </script>
+  </body>
+</html>

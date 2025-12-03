@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Jaytron — Equipment Tracking Login</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Orbitron (tech-like) -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+      :root{
+        --jaytron-orange:#ff7f11;
+      }
+
+      /* full-page muted background image behind content */
+      html,body{height:100%;}
+      body{
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        min-height:100%;
+        margin:0;
+        background-color:#000;
+        color:#fff;
+        position:relative;
+        -webkit-font-smoothing:antialiased;
+      }
+      body::before{
+        content:"";
+        position:fixed;
+        inset:0;
+        z-index:-1;
+        background-image:url("img/drill.jpg");
+        background-size:cover;
+        background-position:center;
+        background-repeat:no-repeat;
+        opacity:0.28;
+        filter:contrast(.95) saturate(.9);
+      }
+
+      /* Centering the card */
+      .auth-wrap{
+        min-height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:2rem;
+      }
+
+      .auth-card{
+        width:100%;
+        max-width:420px;
+        background:rgba(255,255,255,0.03);
+        border:2px solid rgba(255,255,255,0.06);
+        border-radius:12px;
+        padding:1.5rem;
+        box-shadow:0 6px 24px rgba(0,0,0,0.45);
+        backdrop-filter: blur(6px) saturate(.9);
+      }
+
+      .brand {
+        display:flex;
+        gap:.75rem;
+        align-items:center;
+        justify-content:center;
+        margin-bottom:0.75rem;
+      }
+      /* Only show the logo — larger, responsive and flexible */
+      .brand img.brand-logo{
+        display:block;
+        width:100%;
+        max-width:260px;    /* desktop max */
+        height:auto;
+        max-height:110px;   /* limit very tall images */
+        object-fit:contain;
+      }
+
+      @media (max-width:420px){
+        .brand img.brand-logo{ max-width:180px; max-height:80px; }
+      }
+
+      h2.login-title{
+        font-family: 'Orbitron', sans-serif;
+        font-size:1.25rem;
+        margin:.25rem 0 0.75rem 0;
+        text-align:center;
+        color:#fff;
+        letter-spacing:.6px;
+      }
+
+      label.form-label{color: #e8e8e8; font-weight:600; font-size:.9rem;}
+      .form-control{
+        background:rgba(255,255,255,0.03);
+        border:1px solid rgba(255,255,255,0.06);
+        color:#fff;
+      }
+      .form-control:focus{
+        box-shadow:none;
+        border-color:var(--jaytron-orange);
+      }
+
+      .btn-jaytron{
+        background:var(--jaytron-orange);
+        color:#fff;
+        border:none;
+      }
+      .btn-jaytron:hover,.btn-jaytron:focus{background:#e36e00; color:#fff; box-shadow:none;}
+
+      .small-muted{color:rgba(255,255,255,0.7); font-size:.9rem;}
+      .helper-row{display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-top:.5rem;}
+
+      /* small password toggle button */
+      .password-wrap{position:relative;}
+      .password-toggle{
+        position:absolute;
+        right:8px;
+        top:50%;
+        transform:translateY(-50%);
+        background:transparent;
+        border:none;
+        color:rgba(255,255,255,0.7);
+        font-size:1rem;
+        padding:.15rem .35rem;
+      }
+
+      /* responsive adjustments */
+      @media (max-width:420px){
+        .auth-card{padding:1rem;}
+        .brand h1{font-size:.95rem;}
+      }
+
+      /* feedback messages */
+      .login-msg{min-height:1.3rem; margin-top:.6rem; font-weight:600;}
+      .login-msg.success{color:#b7ffb8;}
+      .login-msg.error{color:#ffb7b7;}
+    </style>
+  </head>
+
+  <body>
+    <main class="auth-wrap" role="main">
+      <section class="auth-card" aria-labelledby="login-title">
+        <div class="brand" aria-hidden="true">
+          <a href="index.html"><img class="brand-logo" src="logo/logo1.png" alt="Jaytron logo"></a>
+        </div>
+
+        <h2 id="login-title" class="login-title">Equipment Tracking Login</h2>
+        <p class="small-muted text-center mb-3">Access fleet telemetry, fuel monitoring and remote controls</p>
+
+        <form id="loginForm" onsubmit="return validateLogin()" novalidate>
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input id="username" name="username" type="text" class="form-control" placeholder="e.g. j.smith" inputmode="text" required aria-required="true" autocomplete="username">
+          </div>
+
+          <div class="mb-2 password-wrap">
+            <label for="password" class="form-label">Password</label>
+            <input id="password" name="password" type="password" class="form-control" placeholder="••••••••" required aria-required="true" autocomplete="current-password" minlength="6">
+            <button type="button" class="password-toggle" aria-label="Show password" title="Show password" onclick="togglePassword()">👁️</button>
+          </div>
+
+          <div class="helper-row">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="remember" name="remember">
+              <label class="form-check-label small-muted" for="remember">Remember me</label>
+            </div>
+            <div>
+              <a class="small-muted" href="#" onclick="alert('Use your admin portal to reset password'); return false">Forgot?</a>
+            </div>
+          </div>
+
+          <div class="d-grid gap-2 mt-3">
+            <button type="submit" class="btn btn-jaytron btn-lg" aria-live="polite">Login</button>
+          </div>
+
+          <div id="loginMessage" class="login-msg" role="status" aria-live="polite"></div>
+        </form>
+
+        <div class="text-center mt-3 mb-0">
+          <a href="register.html" class="btn btn-outline-light" role="button" aria-label="Register for access">Register / Request Access</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bootstrap bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Toggle password visibility
+      function togglePassword(){
+        const pw = document.getElementById('password');
+        const btn = document.querySelector('.password-toggle');
+        if(!pw) return;
+        if(pw.type === 'password'){
+          pw.type = 'text';
+          btn.setAttribute('aria-label','Hide password');
+          btn.title = 'Hide password';
+        } else {
+          pw.type = 'password';
+          btn.setAttribute('aria-label','Show password');
+          btn.title = 'Show password';
+        }
+      }
+
+      // Simple client-side validation and simulated login flow
+      function validateLogin(){
+        const user = document.getElementById('username');
+        const pw = document.getElementById('password');
+        const msg = document.getElementById('loginMessage');
+        msg.className = 'login-msg';
+        msg.textContent = '';
+
+        if(!user.value.trim()){
+          msg.classList.add('error');
+          msg.textContent = 'Please enter your username.';
+          user.focus();
+          return false;
+        }
+        if(!pw.value || pw.value.length < 6){
+          msg.classList.add('error');
+          msg.textContent = 'Enter a valid password (min 6 characters).';
+          pw.focus();
+          return false;
+        }
+
+        // show "authenticating" then simulate redirect
+        msg.classList.add('success');
+        msg.textContent = 'Authenticating…';
+
+        // simulate server latency then redirect (replace URL with real dashboard)
+        setTimeout(() => {
+          msg.textContent = 'Login successful — redirecting…';
+          // set the real dashboard URL below
+          window.location.href = 'dashboard.html';
+        }, 850);
+
+        // prevent actual form submit
+        return false;
+      }
+    </script>
+  </body>
+</html>
+
